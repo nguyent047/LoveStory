@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Onbewoond</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/login">Log in</a></li>
+        <li><a href="/registreren">Registreer</a></li>
+      </ul>
+    </nav>
+  </header>
+    <section>
+        <header>
+          <p>
+            Maak een account om verhalen af te kunnen maken.
+          </p>
+        </header>
+        <article>
+            <h1>
+              <%= data.title %>
+            </h1>
+            <p> Verhaal: <br>
+              <%= data.story %>
+            </p>
+            <a href=/login>Maak het verhaal af</a>
+        </article>
+    </section>
+</body>
+</html>

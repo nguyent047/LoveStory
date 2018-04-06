@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Verhalen</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header>
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/login">Log in</a></li>
+          <li><a href="/registreren">Registreer</a></li>
+        </ul>
+      </nav>
+  </header>
+    <section>
+        <h1>
+          Verhalen
+        </h1>
+        <header>
+          <p>
+            Maak een account om verhalen af te kunnen maken.
+          </p>
+        </header>
+        <% for (var index = 0; index < data.length; index++) { %>
+        <article>
+            <h2>
+              <a href="/<%= data[index].id %>"><%= data[index].title %></a>
+            </h2>
+            <p><%= data[index].genre %></p>
+            <p><%= data[index].description %></p>
+          </a>
+        </article>
+        <% } %>
+    </section>
+</body>
+</html>

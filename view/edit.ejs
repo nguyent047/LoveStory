@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Wijzig mijn profiel</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href=verhalen2.ejs>Verhalen</a></li>
+        <li><a href=profiel.ejs>Profiel</a></li>
+        <li><a href=verhalenlijst.ejs>Verhalenlijst</li>
+        <li><a href="index.ejs">Log uit</a></li>
+      </ul>
+    </nav>
+  </header>
+    <section>
+        <article>
+            <h1>
+              Mijn profiel
+            </h1>
+            <img alt="Ik" src=img/gebruiker.jpg>
+            <form action='/'>
+              <fieldset>
+                <legend>
+                  Openbare gegevens
+                </legend>
+                  <label>Naam:<input type=text></label>
+                  <label>Geboortedatum:<input type=text></label>
+                  <label>Woonplaats:<input type=text></label>
+                  <label>Verhaal:<textarea name="" cols="30" rows="10"></textarea></label>
+                  <label>Soort verhaal:<input type=text></label>
+              </fieldset>
+              <fieldset>
+                <legend>
+                  Accountgegevns
+                </legend>
+                  <label>E-mailadres:<input type=text></label>
+                  <label>Wachtwoord:<input type=text></label>
+                  <label>Herhaal wachtwoord:<input type=text></label>
+                  <legend>
+                    Ik ben een
+                  </legend>
+                  <label><input type=radio>een man</label>
+                  <label><input type=radio>een vrouw</label>
+                  <label><input type=radio>intersekse</label>
+                  <legend>
+                    Ik zoek
+                  </legend>
+                  <label><input type=checkbox>een man</label>
+                  <label><input type=checkbox>een vrouw</label>
+                  <label><input type=checkbox>intersekse</label>
+                  <button>Opslaan</button>
+                </fieldset>
+              </form>
+        </article>
+    </section>
+</body>
+</html>

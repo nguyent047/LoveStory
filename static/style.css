@@ -1,0 +1,46 @@
+body {
+    background-color: #f4bd7f;
+    font-family: helvetica;
+}
+
+header, fieldset {
+    background-color: #f8f1d8;
+    text-align: center;
+    border: none;
+}
+
+ul {
+    list-style-type: none;
+}
+
+img {
+    width: 100%;
+    height: auto;
+}
+
+form {
+    background-color: #f8f1d8;
+}
+
+legend {
+    font-size: 1.2em;
+}
+
+article {
+    background-color: #f8f1d8;
+    padding: 1em;
+}
+
+label {
+    display: block;
+}
+
+nav ul {
+    display: flex;
+    flex-direction: row;
+}
+
+nav ul li {
+    margin: .2em;
+    padding: .2em;
+}
