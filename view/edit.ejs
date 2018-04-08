@@ -10,10 +10,9 @@
   <header>
     <nav>
       <ul>
-        <li><a href=verhalen2.ejs>Verhalen</a></li>
-        <li><a href=profiel.ejs>Profiel</a></li>
-        <li><a href=verhalenlijst.ejs>Verhalenlijst</li>
-        <li><a href="index.ejs">Log uit</a></li>
+        <li><a href="/verhalen">Verhalen</a></li>
+        <li><a href="/profiel">Profiel</a></li>
+        <li><a href="/log-out">Uitloggen</a></li>
       </ul>
     </nav>
   </header>
@@ -22,40 +21,23 @@
             <h1>
               Mijn profiel
             </h1>
-            <img alt="Ik" src=img/gebruiker.jpg>
-            <form action='/'>
+            <form action='/edit' method=post>
               <fieldset>
                 <legend>
-                  Openbare gegevens
+                  Gegevens
                 </legend>
-                  <label>Naam:<input type=text></label>
-                  <label>Geboortedatum:<input type=text></label>
-                  <label>Woonplaats:<input type=text></label>
-                  <label>Verhaal:<textarea name="" cols="30" rows="10"></textarea></label>
-                  <label>Soort verhaal:<input type=text></label>
+                  <label>Naam:<input name=name type=text value="<%= data.name %>"></label>
+                  <label>Geboortedatum:<input name=birthdate type=text value="<%= data.birthdate %>"></label>
+                  <label>Woonplaats:<input name=residency type=text value="<%= data.residency %>"></label>
+                  <label>Geslacht:<input name=sex type=text value="<%= data.sex %>"></label>
+                  <label>E-mailadres:<input name=email type=text value="<%= data.email %>"></label>
               </fieldset>
-              <fieldset>
-                <legend>
-                  Accountgegevns
-                </legend>
-                  <label>E-mailadres:<input type=text></label>
-                  <label>Wachtwoord:<input type=text></label>
-                  <label>Herhaal wachtwoord:<input type=text></label>
-                  <legend>
-                    Ik ben een
-                  </legend>
-                  <label><input type=radio>een man</label>
-                  <label><input type=radio>een vrouw</label>
-                  <label><input type=radio>intersekse</label>
-                  <legend>
-                    Ik zoek
-                  </legend>
-                  <label><input type=checkbox>een man</label>
-                  <label><input type=checkbox>een vrouw</label>
-                  <label><input type=checkbox>intersekse</label>
-                  <button>Opslaan</button>
-                </fieldset>
-              </form>
+              <button>Opslaan</button>
+            </form>
+
+            <form action='/remove' method=post>
+              <button>Verwijderen</button>
+            </form>
         </article>
     </section>
 </body>

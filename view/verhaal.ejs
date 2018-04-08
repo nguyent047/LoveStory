@@ -10,26 +10,47 @@
   <header>
     <nav>
       <ul>
+        <% if (!user) { %>
         <li><a href="/">Home</a></li>
         <li><a href="/login">Log in</a></li>
         <li><a href="/registreren">Registreer</a></li>
+        <% } else { %>
+        <li><a href="/verhalen">Verhalen</a></li>
+        <li><a href="/profiel">Profiel</a></li>
+        <li><a href="/log-out">Uitloggen</a></li>
+        <% } %>
       </ul>
     </nav>
   </header>
     <section>
+        <% if (!user) { %>
         <header>
           <p>
             Maak een account om verhalen af te kunnen maken.
           </p>
         </header>
+        <% } %>
         <article>
-            <h1>
-              <%= data.title %>
-            </h1>
+          <h1>
+            <%= data.title %>
+          </h1>
             <p> Verhaal: <br>
               <%= data.story %>
             </p>
+            <% if (!user) { %>
             <a href=/login>Maak het verhaal af</a>
+            <% } else { %>
+            <form action=/writer>
+              <legend>
+                Maak het verhaal af
+              </legend>
+              <fieldset>
+                <textarea name="" cols="40" rows="10"></textarea>
+                <br>
+                <button>Verstuur</button>
+              </fieldset>
+            </form>
+            <% } %>
         </article>
     </section>
 </body>

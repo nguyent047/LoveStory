@@ -6,6 +6,7 @@ var multer = require('multer')
 var mysql = require('mysql')
 var argon2 = require('argon2')
 var session = require('express-session')
+var app = express()
 
 require('dotenv').config()
 
@@ -20,13 +21,19 @@ connection.connect()
 
 var upload = multer({dest: 'static/upload/'})
 
-express()
+app
   .use(express.static('static'))
   .use(bodyParser.urlencoded({extended: true}))
+  .use(session({
+    resave: false,
+    saveUninitialized: true,
+    secret: process.env.SESSION_SECRET
+  }))
   .set('view engine', 'ejs')
   .set('views', 'view')
   .get('/', index)
   .get('/verhalen', storylist)
+  .get('/:id', story)
   .get('/:id', story)
   .get('/registreren', registerForm)
   .post('/registreren', register)
@@ -34,13 +41,10 @@ express()
   .post('/login', log)
   .get('/profiel', profile)
   .get('/edit', editPage)
-  //.post('/edit', edit)
+  .post('/edit', edit)
+  .post('/remove', remove)
+  .get('/log-out', logout)
   .use(notFound)
-  /*.use(session({
-    resave: false,
-    saveUninitialized: true,
-    secret: process.env.SESSION_SECRET
-  }))*/
   .listen(2000)
 
 /**** Home page *****/
@@ -54,12 +58,11 @@ function index(req, res, next) {
 function storylist(req, res, next) {
   connection.query('SELECT * FROM stories', display)
 
-
   function display(err, data){
     if (err) {
       next(err)
     } else {
-      res.render('verhalen.ejs', {data: data})
+      res.render('verhalen.ejs', {user: req.session.user, data: data})
     }
   }
 }
@@ -77,7 +80,8 @@ function story(req, res, next) {
     } else if (data.length === 0) {
       next()
     } else {
-      res.render('verhaal.ejs', {data: data[0]})
+
+      res.render('verhaal.ejs', {user: req.session.user, data: data[0]})
     }
   }
 }
@@ -122,6 +126,7 @@ function register(req, res, next) {
     email,
     check
   )
+
   function check(err, data) {
     if (err) {
       next(err)
@@ -148,7 +153,8 @@ function register(req, res, next) {
         next(err)
       } else {
         // The user is signed up
-        //req.session.user = {name: name}
+        req.session.user = {name: name}
+        req.session.email = email
         res.redirect('/profiel')
       }
     }
@@ -158,7 +164,12 @@ function register(req, res, next) {
 /**** Login *****/
 
 function logForm(req, res) {
-  res.render('login.ejs')
+  if (req.session.user) {
+    res.redirect('/profiel')
+  }
+  else {
+    res.render('login.ejs')
+  }
 }
 
 /**** Search for registered data in database *****/
@@ -170,7 +181,7 @@ function log(req, res, next) {
   // No fields forgotten?
   if (!email || !hash) {
     res
-      .status(400)
+      .status(401)
       .send('Username or password are missing')
 
     return
@@ -203,7 +214,8 @@ function log(req, res, next) {
     function onverify(match) {
       if (match) {
         // The user is logged in
-        //req.session.user = {name: user.name};
+        req.session.user = {name: user.name}
+        req.session.email = user.email
         res.redirect('/profiel')
       } else {
         res.status(401).send('Password incorrect')
@@ -214,26 +226,49 @@ function log(req, res, next) {
 
 /**** Profile *****/
 
-function profile(req, res) {
-  res.render('profiel.ejs')
+function profile(req, res, next) {
+  if (req.session.user) {
+    connection.query('SELECT * FROM myprofile WHERE email = ?', req.session.email , display)
+
+    function display(err, data){
+      if (err) {
+        next(err)
+      } else {
+        res.render('profiel.ejs', {user: req.session.user, data: data[0]})
+      }
+    }
+  }
+  else {
+    res.status(404).render('error.ejs')
+  }
 }
 
 /**** Edit profile *****/
 
 function editPage(req, res, next) {
   if (req.session.user) {
-    res.render('edit.ejs')
-  } else {
+    connection.query('SELECT * FROM myprofile WHERE email = ?', req.session.email , display)
+
+    function display(err, data){
+      if (err) {
+        next(err)
+      } else {
+        res.render('edit.ejs', {data: data[0]})
+      }
+    }
+  }
+  else {
     res.status(401).send('Credentials required')
+    return
   }
 }
 
 /**** Take given data and change that in database *****/
-/*
-function edit(req, res) {
+
+function edit(req, res, next) {
   connection.query(
     'SELECT * FROM myprofile WHERE email = ?',
-    email,
+    req.session.email,
     check
   )
 
@@ -241,27 +276,31 @@ function edit(req, res) {
     if (err) {
       next(err)
     } else if (data.length !== 0) {
-      argon2.hash(hash).then(onhash, next)
+      update()
     } else {
-      res.status(409).send('Email already in use')
+      res.status(409).send('Error, kan gegevens niet wijzigen')
     }
   }
-  function onhash(hash) {
+  function update() {
     var email = req.body.email
-    var hash = req.body.hash
     var name = req.body.name
     var birthdate = req.body.birthdate
     var residency = req.body.residency
     var sex = req.body.sex
 
-    connection.query('UPDATE INTO myprofile SET ?', {
-      email: email,
-      hash: hash,
-      name: name,
-      birthdate: birthdate,
-      residency: residency,
-      sex: sex
-    }, oninsert)
+    connection.query('UPDATE myprofile SET ? WHERE ?',
+    [
+      {
+        email: email,
+        name: name,
+        birthdate: birthdate,
+        residency: residency,
+        sex: sex
+      },
+      {
+        email: req.session.email
+      }
+    ], oninsert)
 
     function oninsert(err) {
       if (err) {
@@ -269,28 +308,40 @@ function edit(req, res) {
       } else {
         // Edited
         req.session.user = {name: name}
+        req.session.email = email
         res.redirect('/profiel')
       }
     }
   }
 }
 
-function add(req, res, next) {
-  if (!req.session.user) {
-    res.status(401).send('Credentials required')
-    return
+function remove(req, res, next) {
+
+  connection.query('DELETE FROM myprofile WHERE email = ?',
+  req.session.email,
+  done)
+
+  function done(err) {
+    if (err) {
+      next(err)
+    } else {
+      res.redirect('/log-out')
+    }
   }
 }
 
-function remove(req, res, next) {
-  if (!req.session.user) {
-    res.status(401).send('Credentials required')
-    return
-  }
+function logout(req, res, next) {
+  req.session.destroy(function (err) {
+    if (err) {
+      next(err)
+    } else {
+      res.redirect('/')
+    }
+  })
 }
 
 /**** Page not found *****/
 
 function notFound(req, res) {
-  res.status(404).render('index.ejs')
+  res.status(404).render('error.ejs')
 }

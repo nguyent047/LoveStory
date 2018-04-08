@@ -6,35 +6,42 @@
     <title>Verhalen</title>
     <link rel="stylesheet" href="/style.css">
 </head>
-<body>
+<body id=lijst>
   <header>
       <nav>
         <ul>
+          <% if (!user) { %>
           <li><a href="/">Home</a></li>
           <li><a href="/login">Log in</a></li>
           <li><a href="/registreren">Registreer</a></li>
+          <% } else { %>
+          <li><a href="/verhalen">Verhalen</a></li>
+          <li><a href="/profiel">Profiel</a></li>
+          <li><a href="/log-out">Uitloggen</a></li>
+          <% } %>
         </ul>
       </nav>
   </header>
     <section>
+      <header>
         <h1>
           Verhalen
         </h1>
-        <header>
-          <p>
+        <% if (!user) { %>
+        <p>
             Maak een account om verhalen af te kunnen maken.
-          </p>
-        </header>
-        <% for (var index = 0; index < data.length; index++) { %>
-        <article>
-            <h2>
-              <a href="/<%= data[index].id %>"><%= data[index].title %></a>
-            </h2>
-            <p><%= data[index].genre %></p>
-            <p><%= data[index].description %></p>
-          </a>
-        </article>
+        </p>
         <% } %>
+      </header>
+      <% for (var index = 0; index < data.length; index++) { %>
+      <article>
+          <h2>
+          <a href="/<%= data[index].id %>"><%= data[index].title %></a>
+            </h2>
+          <p><%= data[index].genre %></p>
+          <p><%= data[index].description %></p>
+      </article>
+      <% } %>
     </section>
 </body>
 </html>

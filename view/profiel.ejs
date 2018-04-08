@@ -11,28 +11,27 @@
     <nav>
       <ul>
         <li><a href="/verhalen">Verhalen</a></li>
-        <li>Profiel</li>
-        <li><a href="/">Log uit</a></li>
+        <li><a href="/profiel">Profiel</a></li>
+        <li><a href="/log-out">Uitloggen</a></li>
       </ul>
     </nav>
   </header>
     <section>
         <article>
             <h1>
-              Joe
+              <%= data.name %>
             </h1>
             <h2>
               Openbare gegevens
             </h2>
-            <p>Leeftijd: <br> 35</p>
-            <p>Woonplaats: <br> Breda</p>
-            <p> Verhaal: <br>
+            <p>Geboortedatum: <%= data.birthdate %><br></p>
+            <p>Woonplaats: <%= data.residency %><br></p>
+            <p>Geslacht: <%= data.sex %> <br></p>
             </p>
             <h2>
               Accountgegevens
             </h2>
-            <p>E-mailadres: <br> Joe@example.nl</p>
-            <p>Wachtwoord: <br> **********</p>
+            <p>E-mailadres: <%= data.email %><br></p>
             <a href=/edit>Wijzig jouw profiel</a>
         </article>
     </section>
